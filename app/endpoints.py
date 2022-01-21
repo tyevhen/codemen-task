@@ -1,4 +1,5 @@
 from flask import current_app, request, jsonify
+from .enums.job_titles import JobTitles
 
 
 @current_app.route('/', methods=['GET'])
@@ -7,9 +8,5 @@ def index():
 
 @current_app.route('/job-titles', methods=['GET'])
 def get_job_titles():
-    return jsonify(users)
-
-# @current_app.route('/users')
-# @current_app.route('/')
-# def get
+    return jsonify([{'value': e.value} for e in JobTitles]), 200
     

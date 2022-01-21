@@ -1,4 +1,4 @@
-from marshmallow import validate, validates
+from marshmallow import validate
 from app import ma
 from app.models.user import User
 
@@ -8,19 +8,18 @@ class UserSchema(ma.SQLAlchemySchema):
         load_instance = True
 
     id = ma.auto_field()
-    first_name = ma.auto_field()
-    last_name = ma.auto_field()
-    email = ma.auto_field(validate=validate.Email())
+    first_name = ma.auto_field(required=True)
+    last_name = ma.auto_field(required=True)
+    email = ma.auto_field(required=True, validate=validate.Email())
     job_title = ma.auto_field()
-    start_date = ma.auto_field()
+    # start_date = ma.auto_field()
 
 class UserUpdateSchema(UserSchema):
     id = ma.auto_field(required=True)
-    first_name = ma.auto_field(required=False)
-    last_name = ma.auto_field(required=False)
-    email = ma.auto_field(required=False)
-    job_title = ma.auto_field(required=False)
-    start_date = ma.auto_field(required=False)
+    first_name = ma.auto_field(required=True)
+    last_name = ma.auto_field(required=True)
+    email = ma.auto_field(required=True, validate=validate.Email())
+    job_title = ma.auto_field(required=True)
     
     
 user_update_schema = UserUpdateSchema()
