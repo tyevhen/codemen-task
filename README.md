@@ -24,6 +24,8 @@
    export FLASK_APP=app
    flask run
 
+App client setup instructions are listed in the respective directory: /codemen-task/client.
+
 In case you face any problems setting project up ask help by email tyshchenko.z@gmail.com or other communcation channel.
 
 Extensive comments are missing in code but I can elaborate on cut corners.
