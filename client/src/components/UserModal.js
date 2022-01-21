@@ -8,9 +8,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { MenuItem } from '@mui/material';
 
 export default function UserModal({ 
-  isOpen, modalType, handleClose, handleChange, form, jobTitles, handleCreate, handleUpdate, errors }) {
-  // console.log("MODAL DATA", form)  
-  // console.log("TYPE", modalType);
+  isOpen, modalType, handleClose, handleChange, form, 
+  jobTitles, handleCreate, handleUpdate, errors }) {
+  
   return (
     <Dialog 
       open={ isOpen } 
@@ -21,6 +21,8 @@ export default function UserModal({
       </DialogTitle>
       <DialogContent>
         <TextField
+          error={ 'first_name' in errors }
+          helperText={ errors.hasOwnProperty('first_name') && errors?.first_name[0] }
           key="firstName"
           onChange={ e => handleChange(e.target.id, e.target.value) }
           value={ form.first_name }
@@ -31,6 +33,8 @@ export default function UserModal({
           variant="standard"
         />
         <TextField
+          error={ 'last_name' in errors }
+          helperText={ errors.hasOwnProperty('last_name') && errors?.last_name[0] }
           key="lastName"
           onChange={ e => handleChange(e.target.id, e.target.value) }
           value={ form.last_name }
@@ -41,6 +45,8 @@ export default function UserModal({
           variant="standard"
         />
         <TextField
+          error={ 'job_title' in errors }
+          helperText={ errors.hasOwnProperty('job_title') && errors?.job_title[0] }
           key="jobTitle"
           onChange={ e => handleChange("job_title", e.target.value) }
           value={ form.job_title || "" }
@@ -58,6 +64,8 @@ export default function UserModal({
           ))}
         </TextField>  
         <TextField
+          error={ 'email' in errors }
+          helperText={ errors.hasOwnProperty('email') && errors.email[0] }
           key="email"
           onChange={ e => handleChange(e.target.id, e.target.value) }
           value={ form.email }

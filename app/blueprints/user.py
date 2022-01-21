@@ -1,5 +1,5 @@
 from ..models.user import User, commit_to_db, delete_from_db
-from flask import request, Blueprint, jsonify, make_response
+from flask import request, Blueprint, jsonify
 from ..schemas.user import user_schema, users_schema, user_update_schema
 import json
 
@@ -15,7 +15,7 @@ def get_all():
 def create():
     errors = user_schema.validate(json.loads(request.data))
     if errors:
-        return jsonify({'errors': [errors]}), 422
+        return jsonify({'errors': errors}), 422
     user = user_schema.load(json.loads(request.data))
     new_user = commit_to_db(user)
     return jsonify(user_schema.dump(new_user)), 201
@@ -24,11 +24,7 @@ def create():
 def get_one(id):
     user = User.query.get(id)
     if not user:
-        return jsonify({
-            'error': {
-                'message': 'No user with id: {} exists'.format(id)
-            }
-        })
+        return jsonify({'error': 'Not found'}), 404
     return jsonify(user_schema.dump(user))
 
 @user.route('/user/<id>', methods=['PUT'])
@@ -36,14 +32,10 @@ def update(id):
     data = json.loads(request.data)
     user = User.query.get(id)
     if not user:
-        return jsonify({
-            'error': {
-                'message': 'Can not update user with id: {}'.format(id)
-            }
-        })
+        return jsonify({'error': 'Can not update user with id: {}'.format(id)})
     errors = user_update_schema.validate(data)
     if errors:
-        return jsonify({'errors': [errors]}), 400
+        return jsonify({'errors': errors}), 400
  
     updated_user_schema = user_update_schema.load(data)
     updated_user = commit_to_db(updated_user_schema)
@@ -51,13 +43,9 @@ def update(id):
 
 @user.route('/user/<id>', methods=['DELETE'])
 def delete(id):
-    user_to_delete = User.query.get(id)
-    if not user_to_delete:
-        return make_response({
-            'error': {
-                'details': 'Can not delete user with id: {}'.format(id)
-            }
-        })
-    id = delete_from_db(user_to_delete)
-    return make_response(jsonify(id), 200)
+    user = User.query.get(id)
+    if not user:
+        return jsonify('Can not delete user with id: {}'.format(id)), 404
+    id = delete_from_db(user)
+    return jsonify('User {} deleted'.format(id)), 200
 

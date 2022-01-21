@@ -1,4 +1,4 @@
-from flask import current_app, request, jsonify
+from flask import current_app, jsonify
 from .enums.job_titles import JobTitles
 
 

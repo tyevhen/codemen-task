@@ -51,7 +51,7 @@ const createUser = (data) => {
     }
 }
 
-const deleteUser = (id, params) => {
+const deleteUser = (id) => {
     return {
         type: DELETE_USER,
         id

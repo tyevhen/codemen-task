@@ -7,7 +7,7 @@ const userState = {
     offset: 0,
     isModalOpen: false,
     modalType: '',
-    errors: [],
+    errors: {},
     form: {
         first_name: '',
         last_name: '',
@@ -22,7 +22,7 @@ export default function user(state = userState, action) {
         case types.FETCH_USERS_SUCCESS:
             return { ...state, 
                 users: action.res.data, 
-                limit: 20,
+                limit: 10,
                 // offset: action.data.offset
             }
         case types.FETCH_JOB_TITLES_SUCCESS:
@@ -33,6 +33,9 @@ export default function user(state = userState, action) {
             return state;
         case types.UPDATE_USER_SUCCESS:
             return state;
+        case types.CREATE_USER_FAILURE:
+            return { ...state, 
+                errors: action.errors }
         case types.UPDATE_USER_FAILURE:
             return { ...state,
                 errors: action.errors

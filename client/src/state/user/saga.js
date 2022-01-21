@@ -9,11 +9,9 @@ const jobTitlesService = new JobTitlesService()
 function* fetchUsersFlow(action) {
     try {
         const res = yield call(userService.find, action.data);
-        console.log("RES", res);
         yield put({ type: actions.FETCH_USERS_SUCCESS, res });
     } catch(err) {
         throw err;
-        // yield put({ type: actions.FETCH_USERS_FAILURE, err });
     }
 }
 
@@ -24,15 +22,17 @@ function* watchFetchUsersFlow() {
 function* updateUserFlow(action) {
     try {
         const res = yield call(userService.update, action.id, action.data);
-        if (res.status !== 201 || !!res?.data?.errors) {
+        if (res.status !== 200 || !!res?.data?.errors) {
             const errors = res.data.errors;
+            console.log(res);
             console.log("WWW", res?.data?.errors);
             yield put({ type: actions.UPDATE_USER_FAILURE, errors: res.data.errors})
+        } else {
+            yield put({ type: actions.CLOSE_MODAL });
+            yield put({ type: actions.FETCH_USERS });
         }
-        // yield put({ type: actions.CLOSE_MODAL })
     } catch(err) {
-        console.log("ERR update", err);
-        yield put({ type: actions.UPDATE_USER_FAILURE,  })
+        throw err;
     }
 }
 
@@ -45,17 +45,36 @@ function* createUserFlow(action) {
         const res = yield call(userService.create, action.data);
         if (res.status !== 201 || !!res?.data?.errors) {
             const errors = res.data.errors;
-            yield put({ type: actions.CREATE_USER_FAILURE, errors })
+            yield put({ type: actions.CREATE_USER_FAILURE, errors });
+        } else {
+            yield put({ type: actions.CLOSE_MODAL });
+            yield put({ type: actions.FETCH_USERS });
         }
-        console.log("CREATE RES", res);
-        yield put({ type: actions.CLOSE_MODAL })
     } catch(err) {
-        console.log("ERR create", err);
+        throw err;
     }
 }
 
 function* watchCreateUserFlow() {
     yield takeLatest(actions.CREATE_USER, createUserFlow);
+}
+
+function* deleteUserFlow(action) {
+    try {
+        const res = yield call(userService.remove, action.id);
+        if (res.status !== 200) {
+            yield put({ type: actions.DELETE_USER_FAILURE });
+        } else {
+            yield put({ type: actions.DELETE_USER_SUCCESS });
+            yield put({ type: actions.FETCH_USERS });
+        }
+    } catch(err) {
+        throw err;
+    }
+}
+
+function* watchDeleteUserFlow() {
+    yield takeLatest(actions.DELETE_USER, deleteUserFlow);
 }
 
 function* fetchJobTitles() {
@@ -76,6 +95,7 @@ export default function* userSaga() {
         watchFetchUsersFlow(),
         watchFetchJobTitles(),
         watchUpdateUserFlow(),
-        watchCreateUserFlow()
+        watchCreateUserFlow(),
+        watchDeleteUserFlow()
     ]);
 };

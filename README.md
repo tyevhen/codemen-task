@@ -1,14 +1,29 @@
 
-# SErver setup
+# Server setup
 
-1. create database guess_game;
-   create user 'lingvist'@'localhost' identified by '1234';
-   grant all privileges on guess_game.* to 'lingvist'@'localhost';
+1. Open mysql console with admin permissions: 
+   sudo mysql
 
-2. pip install virtualenv
-3. virtualenv venv
-4. source venv/bin/activate
-5. pip install requirements.txt
-6. flask db upgrade
-7. export FLASK_APP=app
-8. flask run
+2. Create database and user with privileges
+   create database user_storage;
+   create user 'user_admin'@'localhost' identified by '1234';
+   grant all privileges on user_storage.* to 'user_admin'@'localhost';
+
+3. Setup + start virtual environment
+   pip install virtualenv
+   virtualenv venv
+   source venv/bin/activate
+
+4. Install dependencies 
+   pip install requirements.txt
+
+5. Run migrations 
+   flask db upgrade
+
+6. Launch server app   
+   export FLASK_APP=app
+   flask run
+
+In case you face any problems setting project up ask help by email tyshchenko.z@gmail.com or other communcation channel.
+
+Extensive comments are missing in code but I can elaborate on cut corners.

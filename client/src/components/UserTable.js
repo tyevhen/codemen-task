@@ -1,64 +1,18 @@
 import * as React from 'react';
-import { DataGrid as DataGrid } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { Button } from '@mui/material';
+import { Delete, Edit } from '@mui/icons-material';
+import moment from 'moment';
 
-// const columns = [
-//   { field: 'id', headerName: 'ID', width: 70 },
-//   {
-//     field: 'fullName',
-//     headerName: 'Full name',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 200,
-//     valueGetter: (params) =>
-//       `${params.getValue(params.id, 'first_name') || ''} ${
-//         params.getValue(params.id, 'last_name') || ''
-//       }`,
-//   },
-//   { field: 'job_title', headerName: 'Job title', width: 300 },
-//   { field: 'start_date', headerName: 'Date joined', width: 160 },
-//   { 
-//     field: 'delete', 
-//     headerName: null, 
-//     width: 50,
-//     sortable: false,
-//     renderCell: (value) => {
-//       console.log("delete value", value);
-//       return <button>delete</button>
-//     }
-//   },
-//   { 
-//     field: 'edit', 
-//     headerName: null, 
-//     width: 50,
-//     sortable: false,
-//     renderCell: (value) => {
-//       console.log("edit value", value);
-//       return <button>edit</button>
-//     }
-//   }
-
-//   {
-//     field: 'fullName',
-//     headerName: 'Full name',
-//     description: 'This column has a value getter and is not sortable.',
-//     sortable: false,
-//     width: 160,
-//     valueGetter: (params) =>
-//       `${params.getValue(params.id, 'firstName') || ''} ${
-//         params.getValue(params.id, 'lastName') || ''
-//       }`,
-//   },
-// ];
-
-
-export default function UserTable({ users, limit, offset, handleOpenModal }) {
+export default function UserTable({ users, limit, offset, handleOpenModal, handleDelete }) {
   const columns = [
     { field: 'id', headerName: 'ID', width: 10 },
     {
       field: 'fullName',
       headerName: 'Full name',
+      headerAlign: 'left', 
       sortable: false,
-      width: 150,
+      flex: 1,
       valueGetter: (params) =>
         `${params?.row?.first_name || ''} 
         ${params?.row?.last_name || ''}`,
@@ -66,42 +20,63 @@ export default function UserTable({ users, limit, offset, handleOpenModal }) {
     {
       field: 'email',
       headerName: 'Email',
+      headerAlign: 'left', 
       sortable: false,
-      width: 100
+      flex: 1,
     },
-    { field: 'job_title', headerName: 'Job title', width: 250 },
-    { field: 'start_date', headerName: 'Date joined', width: 160 },
     { 
-      field: 'delete', 
-      headerName: '', 
-      width: 50,
-      sortable: false,
-      renderCell: (value) => {
-        // console.log("delete value", value);
-        return <button>delete</button>
-      }
+      field: 'job_title', 
+      headerName: 'Job title', 
+      headerAlign: 'left', 
+      flex: 1
+    },
+    { 
+      field: 'start_date', 
+      headerName: 'Date joined',
+      headerAlign: 'left', 
+      flex: 1,
+      valueGetter: (params) => 
+        `${moment(params.row.start_date).format('DD/MM/YYYY')}`
     },
     { 
       field: 'edit', 
       headerName: '', 
-      width: 50,
       sortable: false,
+      filterable: false,
       renderCell: (value) => {
-        return <button onClick={ 
-          () => handleOpenModal('edit', value.row) }>edit</button>
+        return <Button 
+          startIcon={<Edit/>} 
+          onClick={ () => handleOpenModal('edit', value.row) }
+        >
+          edit
+        </Button>
+      }
+    },
+    { 
+      field: 'delete', 
+      headerName: '', 
+      sortable: false,
+      filterable: false,
+      renderCell: (value) => {
+        return <Button
+          startIcon={<Delete style={{fill:'red'}}/>}
+          onClick={ () => handleDelete(value.row.id) }
+        />
       }
     }
   ]  
   
   return (
-    <div style={{ height: 600, width: '100%' }}>
-      <DataGrid
-        rows={users}
-        columns={columns}
-        pageSize={limit}
-        hideFooter={true}
-        showColumnRightBorder={false}
-      />
-    </div>
+    <DataGrid
+      autoHeight
+      disableColumnSelector
+      disableSelectionOnClick
+      checkboxSelection={false}
+      rows={users}
+      columns={columns}
+      pageSize={limit}
+      hideFooter={false}
+      showColumnRightBorder={false}
+    />
   );
 }

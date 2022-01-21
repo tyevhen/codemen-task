@@ -5,7 +5,7 @@ import User from './components/User';
 
 const App = () => {
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
             <User/>
         </Container>
     );

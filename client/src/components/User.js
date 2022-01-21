@@ -16,12 +16,18 @@ const User = (props) => {
 
     return (
         <>
-            <Button onClick={ () => props.openModal("add", props.form) }>
+            <Button 
+                style={{'marginTop': 20, 'marginBottom': 20}}
+                variant="contained"
+                onClick={ () => props.openModal("add", props.form) 
+            }>
                 New user
             </Button>    
             <UserTable 
                 users={ props.users }
                 handleOpenModal={ props.openModal }
+                handleDelete={ props.deleteUser }
+                limit={ props.limit }
             />
             <UserModal 
                 modalType={ props.modalType }
