@@ -10,9 +10,9 @@ ma = Marshmallow()
 
 def create_app():
     app = Flask(__name__)
-    # app.config.from_pyfile('config.py')
+    
     CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://admin:1234@localhost/user_storage'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://user_admin:1234@localhost/user_storage'
 
     migrate = Migrate()
     db.init_app(app)
