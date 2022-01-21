@@ -17,7 +17,6 @@ const userState = {
 };
 
 export default function user(state = userState, action) {
-    console.log("IN RR", action);
     switch (action.type) {
         case types.FETCH_USERS_SUCCESS:
             return { ...state, 

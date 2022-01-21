@@ -24,8 +24,6 @@ function* updateUserFlow(action) {
         const res = yield call(userService.update, action.id, action.data);
         if (res.status !== 200 || !!res?.data?.errors) {
             const errors = res.data.errors;
-            console.log(res);
-            console.log("WWW", res?.data?.errors);
             yield put({ type: actions.UPDATE_USER_FAILURE, errors: res.data.errors})
         } else {
             yield put({ type: actions.CLOSE_MODAL });
