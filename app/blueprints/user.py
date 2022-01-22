@@ -3,15 +3,15 @@ from flask import request, Blueprint, jsonify
 from ..schemas.user import user_schema, users_schema, user_update_schema
 import json
 
-user = Blueprint('users', __name__)
+user = Blueprint('users', __name__, url_prefix='/user')
 
-@user.route('/user', methods=['GET'])
+@user.route('', methods=['GET'])
 def get_all():
     query = request.args
     users = User.query.all()
     return jsonify(users_schema.dump(users))
 
-@user.route('/user', methods=['POST'])
+@user.route('', methods=['POST'])
 def create():
     errors = user_schema.validate(json.loads(request.data))
     if errors:
@@ -20,14 +20,14 @@ def create():
     new_user = commit_to_db(user)
     return jsonify(user_schema.dump(new_user)), 201
 
-@user.route('/user/<id>', methods=['GET'])    
+@user.route('/<id>', methods=['GET'])    
 def get_one(id):
     user = User.query.get(id)
     if not user:
         return jsonify({'error': 'Not found'}), 404
     return jsonify(user_schema.dump(user))
 
-@user.route('/user/<id>', methods=['PUT'])
+@user.route('/<id>', methods=['PUT'])
 def update(id):    
     data = json.loads(request.data)
     user = User.query.get(id)
@@ -41,7 +41,7 @@ def update(id):
     updated_user = commit_to_db(updated_user_schema)
     return jsonify(user_schema.dump(updated_user)), 200
 
-@user.route('/user/<id>', methods=['DELETE'])
+@user.route('/<id>', methods=['DELETE'])
 def delete(id):
     user = User.query.get(id)
     if not user:
